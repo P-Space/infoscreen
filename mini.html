@@ -1,0 +1,120 @@
+<html>
+<head>
+<style type="text/css">
+#mydiv 
+{
+	color:white; 
+	background-color: green; 
+	text-align:center; 
+	font-size:20px; 
+	font-family:"Courrier New";
+	vertical-align:"left";
+}
+#mydiv2
+{
+	color:white; 
+	background-color: blue; 
+	text-align:center; 
+	font-size:10px; 
+	font-family:"Courrier New";
+	vertical-align:"left";
+}
+#wtf
+{
+	width:50%; 
+	height:150px; 
+	background-color:blue;
+}
+
+/*p {margin-left:20px;}*/
+/*body {background-image:url("images/back40.gif");}*/
+iframe {
+    -moz-transform: scale(3, 3); 
+    -webkit-transform: scale(3, 3); 
+    -o-transform: scale(3, 3);
+    -ms-transform: scale(3, 3);
+    transform: scale(3, 3); 
+    -moz-transform-origin: top left;
+    -webkit-transform-origin: top left;
+    -o-transform-origin: top left;
+    -ms-transform-origin: top left;
+    transform-origin: top left;
+	width:208px;
+	height:170px;
+}
+</style>
+</head>
+<body>
+<script src="jquery-1.7.1.js"></script>
+<script src="jquery-ui-1.8.17.custom.min.js"></script>
+<script type="text/javascript">
+<!--
+var xmlhttp,last, last2, old, old2;
+old="0";
+old2="0";
+function loadXMLDoc(url,cfunc)
+{
+xmlhttp=new XMLHttpRequest();
+xmlhttp.onreadystatechange=cfunc;
+xmlhttp.open("GET",url,true);
+xmlhttp.send();
+}
+function myFunction()
+{
+	$.get('index.php?limit=1&nostyle&nobutton', function(data) {
+		last = data;
+		if (last!=old)
+		 {
+			old=last;
+			
+		 }
+	});
+
+}
+function myFunction2()
+{
+	$.get('mpd-report.php', function(data) {
+		last2 = data;
+		if (last2!=old2)
+		 {
+			old2=last2;
+			// alert(old);
+			$("#song").html(old2);
+			$( "#mydiv2" ).toggle("blind",{}, 1000 ).delay(45000).toggle("blind",{}, 1000 );
+		 }
+	});
+}
+
+</script>
+<!-- <script>
+	$(document).ready(function(){
+	$("#mydiv").click(function(event){
+	   event.preventDefault();
+	   $(this).show("slow");
+		
+	 });
+  });
+</script> -->
+<script type="text/javascript">
+$(document).ready(function(){	
+	// $("#testing").draggable().width("0px").height("0px");
+	// $("#testing").width("100px").height("100px");
+	//$(".dropdown").hide().height("1.4em").delay(5000);
+	// $("#mydiv").draggable();
+	setInterval ("myFunction()", 500);
+	setInterval ("myFunction2()", 500);
+});
+
+// myFunction();
+</script>
+<style type="text/css">#testing { background-color: silver; }</style>
+<!-- <div id="testing">Drag Me!
+</div> -->
+
+<div width="200px">
+	<div id="mydiv" width=100% height=0px class="dropdown"><span id="username"></span> entered!</div>
+	<div id="mydiv2" width=100% height=0px class="dropdown"><span id="song"></span></div>
+	<!-- <div id="wtf">Bla!</div> -->
+</div>
+</body>
+</html>
