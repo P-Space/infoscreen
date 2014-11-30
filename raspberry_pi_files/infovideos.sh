@@ -25,7 +25,7 @@ do
 	else
 		echo "`date "+%d/%m/%Y %T"` : Starting work" >> infovideos.log 2>&1
 		#midori -e Fullscreen -a http://192.168.1.5/tools/infoscreen/index2.html >> infovideos.log 2>&1&
-		epiphany --private-instance http://192.168.1.5/tools/infoscreen/index2.html >> infovideos.log 2>&1&
+		epiphany --private-instance http://192.168.1.5/tools/infoscreen/index.html >> infovideos.log 2>&1&
 		#for epiphany-browser
 		#
 		sleep 20 # give it time to start
