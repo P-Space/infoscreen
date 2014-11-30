@@ -1,7 +1,38 @@
 <html>
 <head>
-<style type="text/css">
-#mydiv 
+<style>
+body
+{
+	background-color: black;
+	background-image: url("logo.png");
+	background-size: 30%;
+	background-position: center;
+	background-repeat: no-repeat;
+	text-align: center;
+}
+#wrapper
+{
+	min-height:100%;
+	position:relative;
+}
+#upper
+{
+	position:absolute; 
+	left:0px; 
+	padding-left:0px; 
+	top:0px; 
+	width:100%; 
+	z-index:10000000;
+}
+#lower
+{
+	width:100%;
+	height:80px;
+	position:absolute;
+	bottom:0;
+	left:0; 
+}
+#doordiv 
 {
 	color:white; 
 	background-color: green; 
@@ -10,7 +41,7 @@
 	font-family:"Courrier New";
 	vertical-align:"middle";
 }
-#mydiv2
+#songdiv
 {
 	color:white; 
 	background-color: blue; 
@@ -19,52 +50,104 @@
 	font-family:"Courrier New";
 	vertical-align:"middle";
 }
-</style>
-<link type="text/css" href="jplayer/blue.monday/jplayer.blue.monday.css" rel="stylesheet" />
-
-<style type="text/css">
-#jp_container_1
+#temp_div, #hum_div, #clock_div 
 {
-	margin-right:auto;
-	margin-left:auto;
+	color:white;
+    width: 33%;
+    top: 20%;
+    height: auto;
+    float:left;
+    position: relative;
+    display: block; 
+    margin: auto;
+    font-size:60px; 
+	font-family:"Courrier New";
+	vertical-align:"middle";
 }
 </style>
+<script>
+function startTime() {
+    var today=new Date();
+    var h=today.getHours();
+    var m=today.getMinutes();
+    var s=today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    $("#time").html(h+":"+m+":"+s);
+    var t = setTimeout(function(){startTime()},500);
+}
 
+function checkTime(i) {
+    if (i<10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+</script>
 </head>
-<body>
+
+<body onload="startTime()">
 <script src="jquery-1.7.1.js"></script>
 <script src="jquery-ui-1.8.17.custom.min.js"></script>
 <script type="text/javascript">
 <!--
-var xmlhttp,last, last2, old, old2;
+var old, old2, last, last2, last3, last4, old3, old4;
 old="0";
 old2="0";
-function myFunction()
+old3="0";
+old4="0";
+function getDoorData()
 {
-	$.get('http://192.168.1.5/report/?limit=1&nostyle&nobutton', function(data) {
-		last = data;
+	$.get('http://192.168.1.5/tools/infoscreen/getData.php?type=door', function(response) {
+		//response = JSON.parse(data);
+		last = response['data']['time'];
 		if (last!=old)
 		 {
 			old=last;
 			// alert(old);
 			$("#testing").draggable();
-			$("#username").html(old.substring( old.indexOf(" ",0), old.length - 6 ));
+			$("#username").html(response['data']['user']);
 			// $("#mydiv").animate({height:"135px"},1000).delay(5000).animate({height:"0px"},1000);
-			$( "#mydiv" ).toggle("blind",{}, 1000 ).delay(5000).toggle("blind",{}, 1000 );
+			$( "#doordiv" ).toggle("blind",{}, 1000 ).delay(5000).toggle("blind",{}, 1000 );
 		 }
 	});
 
 }
-function myFunction2()
+function getSongData()
 {
-	$.get('mpd-report.php', function(data) {
-		last2 = data;
+	$.get('http://192.168.1.5/tools/infoscreen/getData.php?type=music', function(response) {
+		//response = JSON.parse(data);
+		last2 = response['data']['song'];
 		if (last2!=old2)
 		 {
 			old2=last2;
 			// alert(old);
 			$("#song").html(old2);
-			$( "#mydiv2" ).toggle("blind",{}, 1000 ).delay(45000).toggle("blind",{}, 1000 );
+			$( "#songdiv" ).toggle("blind",{}, 1000 ).delay(45000).toggle("blind",{}, 1000 );
+		 }
+	});
+}
+function getTempData()
+{
+	$.get('http://192.168.1.5/tools/infoscreen/getData.php?type=temperature', function(response) {
+		//response = JSON.parse(data);
+		last3 = response['data']['value'];
+		if (last3!=old3)
+		 {
+			old3=last3;
+			// alert(old);
+			$("#temp").html(old3);
+		 }
+	});
+}
+function getHumData()
+{
+	$.get('http://192.168.1.5/tools/infoscreen/getData.php?type=humidity', function(response) {
+		//response = JSON.parse(data);
+		last4 = response['data']['value'];
+		if (last4!=old4)
+		 {
+			old4=last4;
+			// alert(old);
+			$("#hum").html(old4);
 		 }
 	});
 }
@@ -76,114 +159,29 @@ $(document).ready(function(){
 	// $("#testing").width("100px").height("100px");
 	$(".dropdown").hide().height("1.4em").delay(5000);
 	// $("#mydiv").draggable();
-	setInterval ("myFunction()", 500);
-	setInterval ("myFunction2()", 500);
+	setInterval ("getDoorData()", 500);
+	setInterval ("getSongData()", 500);
+	setInterval ("getTempData()", 1000);
+	setInterval ("getHumData()", 1000);
 });
 
 </script>
 
-
-<script type="text/javascript" src="jplayer/jquery.jplayer.min.js"></script>
-<script type="text/javascript" src="jplayer/jplayer.playlist.min.js"></script>
-<script type="text/javascript" src="jplayer/jquery.jplayer.inspector.js"></script>
-<script type="text/javascript">
-
-$(document).ready(function()
-{
-	url = 'http://192.168.1.5/videos/';
-	$.get(url, function(data)
-	{
-		window.list = data;
-		playlist = new jPlayerPlaylist(
-		{
-			jPlayer: "#jquery_jplayer_1",
-			cssSelectorAncestor: "#jp_container_1"
-		},
-		JSON.parse(window.list), 
-		{
-			playlistOptions: {   shuffleOnLoop: true, autoPlay: true },
-			swfPath: "jplayer/",
-			supplied: "m4v"
-		});
-
-		playlist.shuffle(true);
-		$(".jp-repeat")[0].click();
-		$(".jp-full-screen")[0].click();
-
-	});
-
-	$("#jquery_jplayer_1").bind($.jPlayer.event.ended, function()
-	{
-		$.get(url, function(data)
-		{
-			if(window.list != data)
-				location.reload();
-		});
-	});
-
-});
-		
-</script>
-
-<div style="position:absolute; left:0px; padding-left:0px; top:0px; width:100%; z-index:10000000">
-	<div id="mydiv" width=100% height=0px class="dropdown"><span id="username"></span> entered!</div>
-	<div id="mydiv2" width=100% height=0px class="dropdown"><span id="song"></span></div>
-</div>
-<div id="jp_container_1" class="jp-video jp-video-270p">
-	<div class="jp-type-playlist">
-		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
-		<div class="jp-gui">
-			<div class="jp-video-play">
-				<a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a>
-			</div>
-			<div class="jp-interface">
-				<div class="jp-progress">
-					<div class="jp-seek-bar">
-						<div class="jp-play-bar"></div>
-					</div>
-				</div>
-				<div class="jp-current-time"></div>
-				<div class="jp-duration"></div>
-				<div class="jp-title">
-					<ul>
-						<li></li>
-					</ul>
-				</div>
-				<div class="jp-controls-holder">
-					<ul class="jp-controls">
-						<li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
-						<li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
-						<li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
-						<li><a href="javascript:;" class="jp-next" tabindex="1">next</a></li>
-						<li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
-						<li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
-						<li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
-						<li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
-					</ul>
-					<div class="jp-volume-bar">
-						<div class="jp-volume-bar-value"></div>
-					</div>
-					<ul class="jp-toggles">
-						<li><a href="javascript:;" class="jp-full-screen" tabindex="1" title="full screen">full screen</a></li>
-						<li><a href="javascript:;" class="jp-restore-screen" tabindex="1" title="restore screen">restore screen</a></li>
-						<li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle">shuffle</a></li>
-						<li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off">shuffle off</a></li>
-						<li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
-						<li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
-					</ul>
-				</div>
-			</div>
+<div id="wrapper">
+	<div id="upper">
+		<div id="doordiv" width=100% height=0px class="dropdown"><span id="username"></span> entered!</div>
+		<div id="songdiv" width=100% height=0px class="dropdown"><span id="song"></span></div>
+	</div>
+	<div id="lower">
+		<div id="temp_div" width=100% height=100%> 
+			<img src="thermometer4.png" height="50"> : <span id="temp"> </span> <img src="temperature.png" height="50">
 		</div>
-		<div class="jp-playlist">
-			<ul>
-				<!-- The method Playlist.displayPlaylist() uses this unordered list -->
-				<li></li>
-			</ul>
+		<div id="clock_div" width=100% height=100%>
+			<span id="time"> </span>
 		</div>
-		<div class="jp-no-solution">
-			<span>Update Required</span>
-			To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
-		</div>
+		<div id="hum_div" width=100% height=100%> 
+			<img src="water12.png" height="50"> : <span id="hum"></span> % 
+		</div>		
 	</div>
 </div>
 
