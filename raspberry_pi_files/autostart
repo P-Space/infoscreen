@@ -1,0 +1,9 @@
+#put this file at /etc/xdg/lxsession/LXDE/
+@lxpanel --profile LXDE
+@pcmanfm --desktop --profile LXDE
+@xset s off
+@xset -dpms
+@xset s noblank
+@lxterminal --command "/home/pi/infoscreen/infovideos.sh"
+@xscreensaver -no-splash
+
