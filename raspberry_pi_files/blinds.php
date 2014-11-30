@@ -32,7 +32,8 @@ if(isset($_GET["lights"]))
 	if($_GET["lights"] == "on")
 	{
 		echo "Turning Lights On<br />\n";
-		exec("/opt/vc/bin/tvservice -p");
+		// exec("/opt/vc/bin/tvservice -p");
+		shell_exec("sudo reboot");
 	}
 	else if($_GET["lights"] == "off")
 	{
