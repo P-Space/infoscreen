@@ -37,6 +37,9 @@ $authUsername=""; //enter your username here
 $authPassword=""; //enter your password here
 $sensorsApiURLpart1="http://www.sensorflare.com/api/resource/"; //api URL
 $sensorsApiURLpart2="/report/latest"; //get the latest values.
+$octoprintApiURLpart1="http://localhost/api/job"; //api URL
+$octoprintApiKey=""; //api URL
+$octoprintApiURLpart2="?apiKey=".$octoprintApiKey; //api URL
 
 $ch = curl_init();
 
@@ -66,6 +69,11 @@ elseif($type=="humidity")
 	//cURL parameters for authentication
 	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 	curl_setopt($ch, CURLOPT_USERPWD, "$authUsername:$authPassword");
+}
+elseif($type=="printer")
+{
+	$url=$octoprintApiURLpart1.$octoprintApiURLpart2;
+	$ispost=0;
 }
 
 //set the url, number of POST vars, POST data
@@ -104,6 +112,14 @@ elseif($type=="temperature" || $type=="humidity" && $error_no==0)
 {
 	$response['value']=check_get_value('latest', $resp_obj);
 	$response['time']=check_get_value('latestTime', $resp_obj);
+}
+elseif($type=="printer" && $error_no==0)
+{
+	$response['printTimeLeft']=check_get_value('printTimeLeft', check_get_value('progress', $resp_obj));
+	$response['estimatedPrintTime']=check_get_value('estimatedPrintTime', check_get_value('job', $resp_obj));
+	$response['file']=check_get_value('name', check_get_value('file', check_get_value('job', $resp_obj)));
+	$response['state']=check_get_value('state', $resp_obj);
+	$response['url']=$url;
 }
 
 echo json_encode(array("data"=>$response, "success"=>$success, "error"=>$error_no));
