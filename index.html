@@ -127,9 +127,9 @@ function getSongData()
 }
 function getTempData()
 {
-	$.get('http://192.168.1.5/tools/infoscreen/getData.php?type=temperature', function(response) {
+	$.get('http://192.168.1.5/tools/infoscreen/getData.php?type=weather', function(response) {
 		//response = JSON.parse(data);
-		last3 = response['data']['value'];
+		last3 = response['data']['temp_c'];
 		if (last3!=old3)
 		 {
 			old3=last3;
@@ -140,9 +140,9 @@ function getTempData()
 }
 function getHumData()
 {
-	$.get('http://192.168.1.5/tools/infoscreen/getData.php?type=humidity', function(response) {
+	$.get('http://192.168.1.5/tools/infoscreen/getData.php?type=weather', function(response) {
 		//response = JSON.parse(data);
-		last4 = response['data']['value'];
+		last4 = response['data']['relative_humidity'];
 		if (last4!=old4)
 		 {
 			old4=last4;
@@ -180,7 +180,7 @@ $(document).ready(function(){
 			<span id="time"> </span>
 		</div>
 		<div id="hum_div" width=100% height=100%> 
-			<img src="water12.png" height="50"> : <span id="hum"></span> % 
+			<img src="water12.png" height="50"> : <span id="hum"></span> 
 		</div>		
 	</div>
 </div>

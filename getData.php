@@ -1,5 +1,4 @@
 <?php
-
 //SensorFlare PHP Script
 //This script is used at Patras' Hackerspace in order to get data (such as temperature, humidity, etc) 
 //from sensors that are connected to a NinjaBlock and connect to SensorFlare
@@ -40,8 +39,13 @@ $sensorsApiURLpart2="/report/latest"; //get the latest values.
 $octoprintApiURLpart1="http://localhost/api/job"; //api URL
 $octoprintApiKey=""; //api URL
 $octoprintApiURLpart2="?apiKey=".$octoprintApiKey; //api URL
+$wundergroundApiKey="";
+$weatherUrl="http://api.wunderground.com/api/".$wundergroundApiKey."/conditions/q/GR/Patrai.json";
 
 $ch = curl_init();
+
+$url="";
+$ispost=0;
 
 if($type=="music")
 {
@@ -73,6 +77,11 @@ elseif($type=="humidity")
 elseif($type=="printer")
 {
 	$url=$octoprintApiURLpart1.$octoprintApiURLpart2;
+	$ispost=0;
+}
+elseif($type=="weather")
+{
+	$url=$weatherUrl;
 	$ispost=0;
 }
 
@@ -120,6 +129,14 @@ elseif($type=="printer" && $error_no==0)
 	$response['file']=check_get_value('name', check_get_value('file', check_get_value('job', $resp_obj)));
 	$response['state']=check_get_value('state', $resp_obj);
 	$response['url']=$url;
+}
+elseif($type=="weather" && $error_no==0)
+{
+        $response['temp_c']=check_get_value( 'temp_c', check_get_value('current_observation', $resp_obj) ) ;
+        $response['relative_humidity']=check_get_value( 'relative_humidity', check_get_value('current_observation', $resp_obj) ) ;
+        $response['weather']=check_get_value('current_observation', $resp_obj);
+        $response['state']=check_get_value('state', $resp_obj);
+        $response['url']=$url;
 }
 
 echo json_encode(array("data"=>$response, "success"=>$success, "error"=>$error_no));
