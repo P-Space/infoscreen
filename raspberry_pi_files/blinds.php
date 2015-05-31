@@ -32,13 +32,12 @@ if(isset($_GET["lights"]))
 	if($_GET["lights"] == "on")
 	{
 		echo "Turning Lights On<br />\n";
-		// exec("/opt/vc/bin/tvservice -p");
-		shell_exec("sudo reboot");
+		shell_exec("/usr/bin/vcgencmd display_power 1");
 	}
 	else if($_GET["lights"] == "off")
 	{
 		echo "Turning Lights Off <br/>\n";
-		exec("/opt/vc/bin/tvservice -o");
+		shell_exec("/usr/bin/vcgencmd display_power 0");
 	}
 }
 
