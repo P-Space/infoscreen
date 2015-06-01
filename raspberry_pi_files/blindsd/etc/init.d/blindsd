@@ -1,0 +1,45 @@
+#!/bin/sh
+# Power off/on the screen.
+#
+### BEGIN INIT INFO
+# Provides:          blindsd
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Blinds daemon service
+### END INIT INFO
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DESC="Blinds daemon service"
+NAME=blindsd
+DAEMON=/usr/bin/blindsd
+PIDFILE=/var/run/blindsd.pid
+SCRIPTNAME=/etc/init.d/"$NAME"
+
+test -f $DAEMON || exit 0
+
+. /lib/lsb/init-functions
+
+
+case "$1" in
+start)	log_daemon_msg "Starting $DESC"
+        start-stop-daemon -m --start --background --user root -p $PIDFILE --startas $DAEMON --exec $DAEMON
+        log_end_msg $?
+	;;
+stop)	log_daemon_msg "Stopping $DESC"
+        start-stop-daemon --stop -p $PIDFILE
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && [ -e "$PIDFILE" ] && rm -f $PIDFILE
+        log_end_msg $RETVAL
+        ;;
+restart) log_daemon_msg "Restarting $DESC"
+        $0 stop
+        $0 start
+        ;;
+status)
+        status_of_proc -p $PIDFILE $DAEMON $NAME && exit 0 || exit $?
+        ;;
+*)	log_action_msg "Usage: /etc/init.d/blindsd {start|stop|status|restart}"
+        exit 2
+        ;;
+esac
+exit 0
