@@ -1,0 +1,86 @@
+.space_body {
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("../img/logo.png");
+    background-color: black;
+    text-align: center;
+}
+
+#wrapper {
+    min-height: 100%;
+    position: relative;
+}
+
+#upper {
+    position: absolute;
+    left: 0;
+    padding-left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 10000000;
+}
+
+#lower {
+    width: 100%;
+    height: 80px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+#doordiv {
+    color: white;
+    background-color: green;
+    text-align: center;
+    font-size: 100px;
+    font-family: "Courrier New", sans-serif;
+    vertical-align: middle;
+}
+
+#songdiv {
+    color: white;
+    background-color: blue;
+    text-align: center;
+    font-size: 40px;
+    font-family: "Courrier New", sans-serif;
+    vertical-align: middle;
+}
+
+.sensor_div {
+    color: white;
+    width: 20%;
+    float: left;
+    position: relative;
+    top:24px;
+    margin: 0;
+    border-radius: 0;
+    padding: 0;
+    height: 60px;
+    vertical-align: middle;
+    font-size: 40px;
+    font-family: "Courrier New", sans-serif;
+    text-align: center;
+}
+.sensor_div_2 {
+    width: 38%;
+}
+
+.sensor_img {
+    height: 40px;
+    vertical-align: text-top;
+}
+
+#clock_div {
+    color: white;
+    width: 20%;
+    top: 20%;
+    height: auto;
+    float: left;
+    position: relative;
+    display: block;
+    margin: auto;
+    font-size: 60px;
+    font-family: "Courrier New", sans-serif;
+    vertical-align: middle;
+}
